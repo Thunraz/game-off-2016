@@ -1,0 +1,22 @@
+{
+  "name": "game-off-2016",
+  "version": "1.0.0",
+  "description": "GitHub's month-long game jam 🎮 November 2016 http://gameoff.github.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thunraz/game-off-2016.git"
+  },
+  "author": "Thunraz <thunraz@thunraz.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Thunraz/game-off-2016/issues"
+  },
+  "homepage": "https://github.com/Thunraz/game-off-2016#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
+    "pug": "^2.0.0-beta6",
+    "rollup": "^0.36.3",
+    "st": "^1.2.0"
+  }
+}
