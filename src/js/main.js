@@ -3,10 +3,11 @@
 import Controls from './classes/Controls.js';
 import Game     from './classes/Game.js';
 
-let game     = new Game();
-let controls = new Controls(game);
+let controls = new Controls();
+let game     = new Game(controls);
+game.render();
 
-let lastFrameTime = 0;
+/*let lastFrameTime = 0;
 
 function gameLoop(currentFrameTime) {
     requestAnimationFrame(gameLoop);
@@ -20,4 +21,4 @@ function gameLoop(currentFrameTime) {
     game.render();
 }
 
-gameLoop();
+gameLoop();*/

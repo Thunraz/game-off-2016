@@ -7,8 +7,7 @@ module.exports = () => {
     gulp.task('copy-dependencies', () => {
         return gulp
             .src([
-                './src/ext/pixi.min.js',
-                './src/ext/pixi.min.js.map',
+                './src/ext/phaser.min.js',
 
                 './src/electron/electron.js'
             ])
@@ -24,7 +23,7 @@ module.exports = () => {
                 dest:  'dist/main.js',
                 format: 'iife',
                 globals: {
-                    pixi:   'PIXI'
+                    phaser:   'Phaser'
                 },
             });
         });

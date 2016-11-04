@@ -8,8 +8,7 @@ class Controls {
     // ##############################################
     // # Constructor ################################
     // ##############################################
-    constructor(game) {
-        this.stage   = game.stage;
+    constructor() {
         this.enabled = false;
 
         let scope = this;

@@ -1,6 +1,6 @@
 'use strict';
 
-import * as PIXI from 'pixi';
+import * as Phaser from 'phaser';
 
 class Planet extends PIXI.Container {
     // ##############################################
