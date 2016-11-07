@@ -8,12 +8,14 @@ class Controls {
     // ##############################################
     // # Constructor ################################
     // ##############################################
-    constructor() {
+    constructor(game) {
+        this.game    = game;
+        this.game.paused = true;
         this.enabled = false;
 
         let scope = this;
-        document.addEventListener('pointerlockchange',      () => { scope.onPointerLockChange() }, false);
-        document.addEventListener('pointerlockerror',       () => { scope.onPointerLockError()  }, false);
+        document.addEventListener('pointerlockchange', () => { scope.onPointerLockChange() }, false);
+        document.addEventListener('pointerlockerror',  () => { scope.onPointerLockError()  }, false);
 
         noticeContainer.addEventListener('click', () => {
             noticeContainer.style.display = 'none';
@@ -36,6 +38,8 @@ class Controls {
             blocker.style.display = 'block';
             noticeContainer.style.display = '';
         }
+
+        this.game.paused = !this.enabled;
     }
 
     // ##############################################
