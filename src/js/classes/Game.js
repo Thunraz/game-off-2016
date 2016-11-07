@@ -5,6 +5,10 @@ import * as Phaser from 'phaser';
 import Controls from './Controls.js';
 //import Planet from './Planet.js';
 
+function angleBetweenPoints(p1, p2) {
+    return Math.abs(Math.atan2(p1.y, p1.x) - Math.atan2(p2.y, p2.x));
+}
+
 class Game {
     // ##############################################
     // # Constructor ################################
@@ -44,8 +48,9 @@ class Game {
         this.satellite.endFill();
 
         this.line1 = this.game.add.graphics(0, 0);
+        this.line2 = this.game.add.graphics(0, 0);
         
-        this.game.camera.follow(this.planet, Phaser.Camera.FOLLOW_LOCKON, 0.25, 0.25);
+        this.game.camera.follow(this.planet, Phaser.Camera.FOLLOW_LOCKON, 1, 1);
     }
 
     // ##############################################
@@ -56,6 +61,7 @@ class Game {
         if(this.planet) {
             let sin = Math.sin(this.time);
             let cos = Math.cos(this.time);
+
             let xPos = 400 + 150 * sin;
             let yPos = 300 - 150 * cos;
             this.planet.position.set(xPos, yPos);
@@ -68,12 +74,40 @@ class Game {
                 .lineTo(xPos + 20 * cos, yPos + 20 * sin)
                 .moveTo( 400 - 10 * cos,  300 - 10 * sin)
                 .lineTo(xPos - 20 * cos, yPos - 20 * sin);
+
+            let angle1 = angleBetweenPoints(
+                { x:  400 + 10 * cos, y:  300 + 10 * sin },
+                { x: xPos + 20 * cos, y: yPos + 20 * sin }
+            );
+
+            let angle2 = angleBetweenPoints(
+                { x:  400 - 10 * cos, y:  300 - 10 * sin },
+                { x: xPos - 20 * cos, y: yPos - 20 * sin }
+            );
+
+            this.line2
+                .clear()
+                .lineStyle(1, 0x00ff00)
+
+                /*.moveTo(xPos + 20 * cos, yPos + 20 * sin)
+                .lineTo(xPos + 20 * cos + 250 * sin, yPos + 20 * sin - 250 * cos)
+                .moveTo(xPos - 20 * cos, yPos - 20 * sin)
+                .lineTo(xPos - 20 * cos + 250 * sin, yPos - 20 * sin - 250 * cos)*/
+                
+                .moveTo(xPos + 20 * cos, yPos + 20 * sin)
+                .lineTo(xPos + 20 * cos + 25 * 1/angle1, yPos + 20 * sin - 25 * 1/angle1);
             
-            let sinSatellite = Math.sin(this.time / 10);
-            let cosSatellite = Math.cos(this.time / 10);
-            this.satellite.position.set(xPos + 30 * sinSatellite, yPos + 30 * cosSatellite);
+            this.satellite.position.set(xPos + 30 * Math.sin(this.time / 10), yPos + 30 * Math.cos(this.time / 10));
         }
     }
+
+    // ##############################################
+
+    /*inShadow(e, t, a, s, n) {
+        let i = ((a[1] - t[1]) * e[0] - (a[0] - t[0]) * e[1] + a[0] * t[1] - a[1] * t[0]) / (((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])) / ((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])));
+        let o = angleBetweenPoints([n.pos[0], n.pos[1]], [a[0], a[1]]);
+        return 2 * s > i / 1e3 && i / 1e3 > -(2 * s) && 1 > o;
+    }*/
 
     // ##############################################
     
