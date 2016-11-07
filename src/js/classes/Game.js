@@ -6,7 +6,10 @@ import Controls from './Controls.js';
 //import Planet from './Planet.js';
 
 function angleBetweenPoints(p1, p2) {
-    return Math.abs(Math.atan2(p1.y, p1.x) - Math.atan2(p2.y, p2.x));
+    let deltaX = p2.x - p1.x;
+    let deltaY = p2.y - p1.y;
+
+    return Math.atan2(deltaY, deltaX);
 }
 
 class Game {
@@ -87,15 +90,15 @@ class Game {
 
             this.line2
                 .clear()
-                .lineStyle(1, 0x00ff00)
-
-                /*.moveTo(xPos + 20 * cos, yPos + 20 * sin)
-                .lineTo(xPos + 20 * cos + 250 * sin, yPos + 20 * sin - 250 * cos)
-                .moveTo(xPos - 20 * cos, yPos - 20 * sin)
-                .lineTo(xPos - 20 * cos + 250 * sin, yPos - 20 * sin - 250 * cos)*/
+                .lineStyle(0)
+                .beginFill(0xff9933)
                 
                 .moveTo(xPos + 20 * cos, yPos + 20 * sin)
-                .lineTo(xPos + 20 * cos + 25 * 1/angle1, yPos + 20 * sin - 25 * 1/angle1);
+                .lineTo(xPos + 20 * cos + 250 * Math.cos(angle1), yPos + 20 * sin + 250 * Math.sin(angle1))
+                .lineTo(xPos - 20 * cos + 250 * Math.cos(angle2), yPos - 20 * sin + 250 * Math.sin(angle2))
+                .lineTo(xPos - 20 * cos, yPos - 20 * sin)
+                
+                .endFill();
             
             this.satellite.position.set(xPos + 30 * Math.sin(this.time / 10), yPos + 30 * Math.cos(this.time / 10));
         }
