@@ -28,7 +28,7 @@ class Game {
         this.controls = new Controls(this.game);
         this.time = 0.0;
 
-        this.game.world.setBounds(-1000, -1000, 1920, 1920);
+        this.game.world.setBounds(-1000, -1000, 3000, 3000);
 
         this.sun = this.game.add.graphics(400, 300);
         this.sun.lineStyle(0);
@@ -49,11 +49,18 @@ class Game {
         this.satellite.beginFill(0xdddddd);
         this.satellite.drawCircle(0, 0, 5);
         this.satellite.endFill();
+        this.satellite.inShadow = false;
+
+        this.player = this.game.add.graphics(550, 300);
+        this.player.lineStyle(0);
+        this.player.beginFill(0xff9933);
+        this.player.drawCircle(0, 0, 2);
+        this.player.endFill();
 
         this.line1 = this.game.add.graphics(0, 0);
-        this.line2 = this.game.add.graphics(0, 0);
+        this.polygon = this.game.add.graphics(0, 0);
         
-        this.game.camera.follow(this.planet, Phaser.Camera.FOLLOW_LOCKON, 1, 1);
+        this.game.camera.follow(this.planet, Phaser.Camera.FOLLOW_TOPDOWN, 0.2, 0.2);
     }
 
     // ##############################################
@@ -62,21 +69,12 @@ class Game {
         this.time += this.game.time.elapsed / 1000;
 
         if(this.planet) {
-            let sin = Math.sin(this.time);
-            let cos = Math.cos(this.time);
+            let sin = Math.sin(this.time / 30);
+            let cos = Math.cos(this.time / 30);
 
-            let xPos = 400 + 150 * sin;
-            let yPos = 300 - 150 * cos;
+            let xPos = 400 + 500 * sin;
+            let yPos = 300 - 500 * cos;
             this.planet.position.set(xPos, yPos);
-
-            this.line1
-                .clear()
-                .lineStyle(1, 0xff0000)
-
-                .moveTo( 400 + 10 * cos,  300 + 10 * sin)
-                .lineTo(xPos + 20 * cos, yPos + 20 * sin)
-                .moveTo( 400 - 10 * cos,  300 - 10 * sin)
-                .lineTo(xPos - 20 * cos, yPos - 20 * sin);
 
             let angle1 = angleBetweenPoints(
                 { x:  400 + 10 * cos, y:  300 + 10 * sin },
@@ -88,19 +86,23 @@ class Game {
                 { x: xPos - 20 * cos, y: yPos - 20 * sin }
             );
 
-            this.line2
+            let shadowLength = 1250;
+
+            this.polygon
                 .clear()
                 .lineStyle(0)
-                .beginFill(0xff9933)
+                .beginFill(0x333333, 0.5)
                 
                 .moveTo(xPos + 20 * cos, yPos + 20 * sin)
-                .lineTo(xPos + 20 * cos + 250 * Math.cos(angle1), yPos + 20 * sin + 250 * Math.sin(angle1))
-                .lineTo(xPos - 20 * cos + 250 * Math.cos(angle2), yPos - 20 * sin + 250 * Math.sin(angle2))
+                .lineTo(xPos + 20 * cos + shadowLength * Math.cos(angle1), yPos + 20 * sin + shadowLength * Math.sin(angle1))
+                .lineTo(xPos - 20 * cos + shadowLength * Math.cos(angle2), yPos - 20 * sin + shadowLength * Math.sin(angle2))
                 .lineTo(xPos - 20 * cos, yPos - 20 * sin)
                 
                 .endFill();
             
-            this.satellite.position.set(xPos + 30 * Math.sin(this.time / 10), yPos + 30 * Math.cos(this.time / 10));
+            this.satellite.position.set(xPos + 30 * Math.sin(this.time), yPos + 30 * Math.cos(this.time));
+
+            this.player.position.set(xPos + 20 * Math.sin(this.time / 25), yPos + 20 * Math.cos(this.time / 25));
         }
     }
 
@@ -115,8 +117,8 @@ class Game {
     // ##############################################
     
     render() {
-        this.game.debug.cameraInfo(this.game.camera, 32, 32);
-        //this.game.debug.spriteCoords(player, 32, 500);
+        this.game.debug.cameraInfo(this.game.camera, 0, 32);
+        this.game.debug.text('Satellite in shadow: ' + this.satellite.inShadow, 0, 10);
     }
 
     // ##############################################
