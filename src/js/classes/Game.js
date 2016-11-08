@@ -2,15 +2,8 @@
 
 import * as Phaser from 'phaser';
 
-import Controls  from './Controls.js';
-import Satellite from './Satellite.js';
-
-function angleBetweenPoints(p1, p2) {
-    let deltaX = p2.x - p1.x;
-    let deltaY = p2.y - p1.y;
-
-    return Math.atan2(deltaY, deltaX);
-}
+import Controls from './Controls.js';
+import Planet   from './Planet.js';
 
 /*inShadow(e, t, a, s, n) {
         let i = ((a[1] - t[1]) * e[0] - (a[0] - t[0]) * e[1] + a[0] * t[1] - a[1] * t[0]) / (((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])) / ((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])));
@@ -34,6 +27,7 @@ class Game {
         this.controls = new Controls(this.game);
         this.time = 0.0;
 
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.world.setBounds(-1000, -1000, 3000, 3000);
 
         this.sun = this.game.add.graphics(400, 300);
@@ -42,76 +36,23 @@ class Game {
         this.sun.drawCircle(0, 0, 20);
         this.sun.endFill();
 
-        let planetGraphics = new Phaser.Graphics(0, 0);
-        planetGraphics.lineStyle(0);
-        planetGraphics.beginFill(0x3399ff);
-        planetGraphics.drawCircle(0, 0, 40);
-        planetGraphics.endFill();
-        this.planet = this.game.add.sprite(550, 300, planetGraphics.generateTexture());
-        this.planet.pivot.set(20, 20);
-
-        this.satellite = new Satellite(this, new Phaser.Point(550, 290), 30);
-
-        this.player = this.game.add.graphics(550, 300);
-        this.player.lineStyle(0);
-        this.player.beginFill(0xff9933);
-        this.player.drawCircle(0, 0, 2);
-        this.player.endFill();
-
-        this.line1 = this.game.add.graphics(0, 0);
-        this.polygon = this.game.add.graphics(0, 0);
+        this.planet = new Planet(this, 400, 300, 500);
         
-        this.game.camera.follow(this.planet, Phaser.Camera.FOLLOW_TOPDOWN, 0.2, 0.2);
+        this.game.camera.follow(this.planet.planet, Phaser.Camera.FOLLOW_TOPDOWN, 0.2, 0.2);
     }
 
     // ##############################################
 
     update() {
         this.time += this.game.time.elapsed / 1000;
-
-        if(this.planet) {
-            let sin = Math.sin(this.time / 30);
-            let cos = Math.cos(this.time / 30);
-
-            let xPos = 400 + 500 * sin;
-            let yPos = 300 - 500 * cos;
-            this.planet.position.set(xPos, yPos);
-
-            let angle1 = angleBetweenPoints(
-                { x:  400 + 10 * cos, y:  300 + 10 * sin },
-                { x: xPos + 20 * cos, y: yPos + 20 * sin }
-            );
-
-            let angle2 = angleBetweenPoints(
-                { x:  400 - 10 * cos, y:  300 - 10 * sin },
-                { x: xPos - 20 * cos, y: yPos - 20 * sin }
-            );
-
-            let shadowLength = 1250;
-
-            this.polygon
-                .clear()
-                .lineStyle(0)
-                .beginFill(0x333333, 0.5)
-                
-                .moveTo(xPos + 20 * cos, yPos + 20 * sin)
-                .lineTo(xPos + 20 * cos + shadowLength * Math.cos(angle1), yPos + 20 * sin + shadowLength * Math.sin(angle1))
-                .lineTo(xPos - 20 * cos + shadowLength * Math.cos(angle2), yPos - 20 * sin + shadowLength * Math.sin(angle2))
-                .lineTo(xPos - 20 * cos, yPos - 20 * sin)
-                
-                .endFill();
-
-            this.satellite.update(new Phaser.Point(xPos, yPos));
-
-            this.player.position.set(xPos + 20 * Math.sin(this.time / 25), yPos + 20 * Math.cos(this.time / 25));
-        }
+        this.planet.update();
     }
 
     // ##############################################
     
     render() {
         this.game.debug.cameraInfo(this.game.camera, 0, 32);
-        this.game.debug.text('Satellite in shadow: ' + this.satellite.inShadow, 0, 10);
+        //this.game.debug.text('Satellite in shadow: ' + this.satellite.inShadow, 0, 10);
     }
 
     // ##############################################

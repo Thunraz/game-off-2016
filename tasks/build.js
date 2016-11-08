@@ -7,7 +7,7 @@ module.exports = () => {
     gulp.task('copy-dependencies', () => {
         return gulp
             .src([
-                './src/ext/phaser.min.js',
+                './src/ext/phaser.js',
 
                 './src/electron/electron.js'
             ])
