@@ -1,7 +1,5 @@
 'use strict';
 
-import * as Phaser from 'phaser';
-
 class Satellite {
     // ##############################################
     // # Constructor ################################
