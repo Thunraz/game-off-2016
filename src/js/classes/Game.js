@@ -2,8 +2,8 @@
 
 import * as Phaser from 'phaser';
 
-import Controls from './Controls.js';
-//import Planet from './Planet.js';
+import Controls  from './Controls.js';
+import Satellite from './Satellite.js';
 
 function angleBetweenPoints(p1, p2) {
     let deltaX = p2.x - p1.x;
@@ -11,6 +11,12 @@ function angleBetweenPoints(p1, p2) {
 
     return Math.atan2(deltaY, deltaX);
 }
+
+/*inShadow(e, t, a, s, n) {
+        let i = ((a[1] - t[1]) * e[0] - (a[0] - t[0]) * e[1] + a[0] * t[1] - a[1] * t[0]) / (((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])) / ((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])));
+        let o = angleBetweenPoints([n.pos[0], n.pos[1]], [a[0], a[1]]);
+        return 2 * s > i / 1e3 && i / 1e3 > -(2 * s) && 1 > o;
+    }*/
 
 class Game {
     // ##############################################
@@ -44,12 +50,7 @@ class Game {
         this.planet = this.game.add.sprite(550, 300, planetGraphics.generateTexture());
         this.planet.pivot.set(20, 20);
 
-        this.satellite = this.game.add.graphics(550, 290);
-        this.satellite.lineStyle(0);
-        this.satellite.beginFill(0xdddddd);
-        this.satellite.drawCircle(0, 0, 5);
-        this.satellite.endFill();
-        this.satellite.inShadow = false;
+        this.satellite = new Satellite(this, new Phaser.Point(550, 290), 30);
 
         this.player = this.game.add.graphics(550, 300);
         this.player.lineStyle(0);
@@ -99,20 +100,12 @@ class Game {
                 .lineTo(xPos - 20 * cos, yPos - 20 * sin)
                 
                 .endFill();
-            
-            this.satellite.position.set(xPos + 30 * Math.sin(this.time), yPos + 30 * Math.cos(this.time));
+
+            this.satellite.update(new Phaser.Point(xPos, yPos));
 
             this.player.position.set(xPos + 20 * Math.sin(this.time / 25), yPos + 20 * Math.cos(this.time / 25));
         }
     }
-
-    // ##############################################
-
-    /*inShadow(e, t, a, s, n) {
-        let i = ((a[1] - t[1]) * e[0] - (a[0] - t[0]) * e[1] + a[0] * t[1] - a[1] * t[0]) / (((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])) / ((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])));
-        let o = angleBetweenPoints([n.pos[0], n.pos[1]], [a[0], a[1]]);
-        return 2 * s > i / 1e3 && i / 1e3 > -(2 * s) && 1 > o;
-    }*/
 
     // ##############################################
     
