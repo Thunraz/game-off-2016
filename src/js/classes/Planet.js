@@ -15,34 +15,50 @@ class Planet {
     // ##############################################
     // # Constructor ################################
     // ##############################################
-    constructor(game, x, y, orbitRadius) {
+    constructor(game, options) {
         this.game = game;
 
-        this.group = this.game.add.group();
-        this.group.x = x;
-        this.group.y = y;
+        this.options = {
+            center:             options.center              || new Phaser.Point(0, 0),
+            orbit:              options.orbit               || 300,
+            radius:             options.radius              || 100,
+            focusPointDistance: options.focusPointDistance  || 20,
+            satelliteRangeMin:  options.satelliteRangeMin   || 50,
+            satelliteRangeMax:  options.satelliteRangeMax   || 300
+        };
 
-        this.orbitCenter = new Phaser.Point(x, y);
-        this.orbitRadius = orbitRadius;
+        this.group = this.game.add.group();
+        this.group.x = this.options.center.x;
+        this.group.y = this.options.center.y;
 
         let planetGraphics = new Phaser.Graphics(0, 0);
         planetGraphics.lineStyle(0);
         planetGraphics.beginFill(0x3399ff);
-        planetGraphics.drawCircle(0, 0, 40);
+        planetGraphics.drawCircle(0, 0, this.options.radius * 2);
         planetGraphics.endFill();
-        this.planet = this.group.create(0, 0, planetGraphics.generateTexture());
-        this.planet.pivot.set(20, 20);
+        let planet = this.group.create(0, 0, planetGraphics.generateTexture());
+        planet.pivot.set(this.options.radius, this.options.radius);
 
         let playerGraphics = new Phaser.Graphics(0, 0);
-        //this.player = this.game.add.graphics(550, 300);
         playerGraphics.lineStyle(0);
         playerGraphics.beginFill(0xff9933);
         playerGraphics.drawCircle(0, 0, 2);
         playerGraphics.endFill();
-        this.player = this.group.create(20, 0, playerGraphics.generateTexture());
+        this.player = this.group.create(this.options.radius, 0, playerGraphics.generateTexture());
         this.player.pivot.set(1, 1);
 
-        this.satellite = this.game.add.existing(new Satellite(this, 550, 290, 30));
+        let focusPointGraphics = new Phaser.Graphics(0, 0);
+        focusPointGraphics.beginFill(0x99ff33);
+        focusPointGraphics.drawCircle(0, 0, 2);
+        focusPointGraphics.endFill();
+        this.focusPoint = this.group.create(
+            this.options.radius + this.options.focusPointDistance,
+            0,
+            focusPointGraphics.generateTexture()
+        );
+
+        let satellite = new Satellite(this, this.options.center.x, this.options.center.y, this.options.radius + this.options.satelliteRangeMin);
+        this.satellite = this.game.add.existing(satellite);
         this.shadow = this.game.add.graphics(0, 0);
     }
 
@@ -52,21 +68,25 @@ class Planet {
         let sin = Math.sin(this.game.time / 30);
         let cos = Math.cos(this.game.time / 30);
 
-        let xPos = this.orbitCenter.x + this.orbitRadius * sin;
-        let yPos = this.orbitCenter.y - this.orbitRadius * cos;
+        let xPos = this.options.center.x + this.options.orbit * sin;
+        let yPos = this.options.center.y - this.options.orbit * cos;
         this.group.x = xPos;
         this.group.y = yPos;
 
-        this.group.rotation -= this.game.game.time.elapsed / 1000;
+        this.group.rotation -= this.game.game.time.elapsed / 1000 / 200;
 
+        this.game.game.debug.text(this.focusPoint.world.x,   0, 15);
+        this.game.game.debug.text(this.focusPoint.world.y, 300, 15);
+
+        // Calculate shadow
         let angle1 = angleBetweenPoints(
-            { x:  400 + 10 * cos, y:  300 + 10 * sin },
-            { x: xPos + 20 * cos, y: yPos + 20 * sin }
+            { x: this.options.center.x + 10 * cos, y: this.options.center.y + 10 * sin },
+            { x: xPos + this.options.radius * cos, y: yPos + this.options.radius * sin }
         );
 
         let angle2 = angleBetweenPoints(
-            { x:  400 - 10 * cos, y:  300 - 10 * sin },
-            { x: xPos - 20 * cos, y: yPos - 20 * sin }
+            { x: this.options.center.x - 10 * cos, y: this.options.center.y - 10 * sin },
+            { x: xPos - this.options.radius * cos, y: yPos - this.options.radius * sin }
         );
 
         let shadowLength = 1250;
@@ -76,14 +96,12 @@ class Planet {
             .lineStyle(0)
             .beginFill(0x333333, 0.5)
             
-            .moveTo(xPos + 20 * cos, yPos + 20 * sin)
-            .lineTo(xPos + 20 * cos + shadowLength * Math.cos(angle1), yPos + 20 * sin + shadowLength * Math.sin(angle1))
-            .lineTo(xPos - 20 * cos + shadowLength * Math.cos(angle2), yPos - 20 * sin + shadowLength * Math.sin(angle2))
-            .lineTo(xPos - 20 * cos, yPos - 20 * sin)
+            .moveTo(xPos + this.options.radius * cos, yPos + this.options.radius * sin)
+            .lineTo(xPos + this.options.radius * cos + shadowLength * Math.cos(angle1), yPos + this.options.radius * sin + shadowLength * Math.sin(angle1))
+            .lineTo(xPos - this.options.radius * cos + shadowLength * Math.cos(angle2), yPos - this.options.radius * sin + shadowLength * Math.sin(angle2))
+            .lineTo(xPos - this.options.radius * cos, yPos - this.options.radius * sin)
             
             .endFill();
-
-        //this.player.position.set(xPos + 20 * Math.sin(this.time / 25), yPos + 20 * Math.cos(this.time / 25));
     }
 
     // ##############################################

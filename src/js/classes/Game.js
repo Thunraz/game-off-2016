@@ -28,24 +28,34 @@ class Game {
         this.time = 0.0;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.world.setBounds(-1000, -1000, 3000, 3000);
+        this.game.world.setBounds(-5000, -5000, 10000, 10000);
 
-        this.sun = this.game.add.graphics(400, 300);
+        this.sun = this.game.add.graphics(0, 0);
         this.sun.lineStyle(0);
         this.sun.beginFill(0xffff00);
         this.sun.drawCircle(0, 0, 20);
         this.sun.endFill();
 
-        this.planet = new Planet(this, 400, 300, 500);
+        this.planet = new Planet(this, {
+            orbitCenter:        new Phaser.Point(0, 0),
+            orbitRadius:        300,
+            radius:             100,
+            focusPointDistance: 20,
+            satelliteRangeMin:  50,
+            satelliteRangeMax:  300
+        });
         
-        this.game.camera.follow(this.planet.planet, Phaser.Camera.FOLLOW_TOPDOWN, 0.2, 0.2);
+        //this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_LOCKON, 0.25, 0.25);
     }
 
     // ##############################################
 
     update() {
-        this.time += this.game.time.elapsed / 1000;
+        this.time = this.game.time.now / 1000;
         this.planet.update();
+
+        this.game.camera.x = this.planet.focusPoint.world.x - this.game.camera.width / 2;
+        this.game.camera.y = this.planet.focusPoint.world.y - this.game.camera.height / 2;
     }
 
     // ##############################################
