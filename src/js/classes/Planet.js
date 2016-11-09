@@ -65,18 +65,15 @@ class Planet {
     // ##############################################
 
     update() {
-        let sin = Math.sin(this.game.time / 30);
-        let cos = Math.cos(this.game.time / 30);
+        let sin = Math.sin(this.game.game.time.now / 100000);
+        let cos = Math.cos(this.game.game.time.now / 100000);
 
         let xPos = this.options.center.x + this.options.orbit * sin;
         let yPos = this.options.center.y - this.options.orbit * cos;
         this.group.x = xPos;
         this.group.y = yPos;
 
-        this.group.rotation -= this.game.game.time.elapsed / 1000 / 200;
-
-        this.game.game.debug.text(this.focusPoint.world.x,   0, 15);
-        this.game.game.debug.text(this.focusPoint.world.y, 300, 15);
+        this.group.rotation -= this.game.game.time.physicsElapsed / 10;
 
         // Calculate shadow
         let angle1 = angleBetweenPoints(

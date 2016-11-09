@@ -44,8 +44,8 @@ class Game {
             satelliteRangeMin:  50,
             satelliteRangeMax:  300
         });
-        
-        //this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_LOCKON, 0.25, 0.25);
+
+        this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT, 0.5, 0.5);
     }
 
     // ##############################################
@@ -53,9 +53,6 @@ class Game {
     update() {
         this.time = this.game.time.now / 1000;
         this.planet.update();
-
-        this.game.camera.x = this.planet.focusPoint.world.x - this.game.camera.width / 2;
-        this.game.camera.y = this.planet.focusPoint.world.y - this.game.camera.height / 2;
     }
 
     // ##############################################
