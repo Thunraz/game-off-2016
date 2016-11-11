@@ -33,6 +33,7 @@ class Planet {
         this.group = this.game.add.group();
         this.group.x = this.options.center.x;
         this.group.y = this.options.center.y;
+        this.group.rotation = Math.PI * -0.95;
 
         let planetGraphics = new Phaser.Graphics(0, 0);
         planetGraphics.lineStyle(0);
@@ -90,7 +91,7 @@ class Planet {
         this.group.x = xPos;
         this.group.y = yPos;
 
-        this.group.rotation -= this.game.game.time.physicsElapsed * 1 / this.options.radius;
+        this.group.rotation -= this.game.game.time.physicsElapsed * 1 / Math.sqrt(this.options.radius);
 
         // Calculate shadow
         let angle1 = angleBetweenPoints(
