@@ -34,9 +34,11 @@ class Satellite extends Phaser.Sprite {
     // ##############################################
 
     update() {
+        let val = this.game.time * this.options.velocity + this.options.offset;
+
         this.position.set(
-            this.planet.group.x + this.options.altitude * Math.sin(this.game.time * this.options.velocity + this.options.offset),
-            this.planet.group.y + this.options.altitude * Math.cos(this.game.time * this.options.velocity + this.options.offset)
+            this.planet.group.x + this.options.altitude * Math.sin(val),
+            this.planet.group.y + this.options.altitude * Math.cos(val)
         );
     }
 
