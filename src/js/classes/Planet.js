@@ -2,6 +2,7 @@
 
 import * as Phaser from 'phaser';
 
+import Range     from './Range.js';
 import Satellite from './Satellite.js';
 
 function angleBetweenPoints(p1, p2) {
@@ -23,8 +24,10 @@ class Planet {
             orbit:              options.orbit               || 300,
             radius:             options.radius              || 100,
             focusPointDistance: options.focusPointDistance  || 20,
-            satelliteRangeMin:  options.satelliteRangeMin   || 50,
-            satelliteRangeMax:  options.satelliteRangeMax   || 300
+            satellite:          {
+                number:   250,
+                altitude: new Range(50, this.game.game.height - 50)
+            }
         };
 
         this.group = this.game.add.group();
@@ -48,17 +51,31 @@ class Planet {
         this.player.pivot.set(1, 1);
 
         let focusPointGraphics = new Phaser.Graphics(0, 0);
-        focusPointGraphics.beginFill(0x99ff33);
-        focusPointGraphics.drawCircle(0, 0, 2);
-        focusPointGraphics.endFill();
+        //focusPointGraphics.beginFill(0x99ff33);
+        //focusPointGraphics.drawCircle(0, 0, 2);
+        //focusPointGraphics.endFill();
         this.focusPoint = this.group.create(
             this.options.radius + this.options.focusPointDistance,
             0,
             focusPointGraphics.generateTexture()
         );
 
-        let satellite = new Satellite(this, this.options.center.x, this.options.center.y, this.options.radius + this.options.satelliteRangeMin);
-        this.satellite = this.game.add.existing(satellite);
+        // Create some satellites
+        this.satellites = [];
+        for(let i = 0; i < this.options.satellite.number; i++) {
+            let altitude = this.options.satellite.altitude.random();
+            let satelliteOptions = {
+                altitude:  this.options.radius + altitude,
+                center:    this.options.center.clone(),
+                clockwise: Math.round(Math.random(0, 1)) == 1
+            };
+            
+            let satellite = new Satellite(this, satelliteOptions);
+            this.satellites.push(satellite);
+            this.game.add.existing(satellite)
+        }
+        
+        // Add planet shadow last so it overlaps everything
         this.shadow = this.game.add.graphics(0, 0);
     }
 
@@ -73,7 +90,7 @@ class Planet {
         this.group.x = xPos;
         this.group.y = yPos;
 
-        this.group.rotation -= this.game.game.time.physicsElapsed / 10;
+        this.group.rotation -= this.game.game.time.physicsElapsed * 1 / this.options.radius;
 
         // Calculate shadow
         let angle1 = angleBetweenPoints(
@@ -86,7 +103,7 @@ class Planet {
             { x: xPos - this.options.radius * cos, y: yPos - this.options.radius * sin }
         );
 
-        let shadowLength = 1250;
+        let shadowLength = this.options.radius * 5;
 
         this.shadow
             .clear()

@@ -6,13 +6,21 @@ class Satellite extends Phaser.Sprite {
     // ##############################################
     // # Constructor ################################
     // ##############################################
-    constructor(planet, x, y, offset) {
-        super(planet.game, x, y);
+    constructor(planet, options) {
+        super(planet.game, options.center.x || 0, options.center.y || 0);
+
+        this.options = {
+            altitude:  options.altitude  || 50,
+            center:    options.center    || new Phaser.Point(0, 0),
+            clockwise: options.clockwise || true,
+
+            offset:    Math.random() * Math.PI * 2,
+            velocity:  1 / Math.pow(options.altitude - planet.options.radius, 1.1) * 10 * (options.clockwise ? 1 : -1)
+        };
 
         this.planet = planet;
-        this.offset = offset;
 
-        let graphics = new Phaser.Graphics(x, y);
+        let graphics = new Phaser.Graphics(this.x, this.y);
         graphics.lineStyle(0);
         graphics.beginFill(0xdddddd);
         graphics.drawCircle(0, 0, 5);
@@ -27,8 +35,8 @@ class Satellite extends Phaser.Sprite {
 
     update() {
         this.position.set(
-            this.planet.group.x + this.offset * Math.sin(this.game.time),
-            this.planet.group.y + this.offset * Math.cos(this.game.time)
+            this.planet.group.x + this.options.altitude * Math.sin(this.game.time * this.options.velocity + this.options.offset),
+            this.planet.group.y + this.options.altitude * Math.cos(this.game.time * this.options.velocity + this.options.offset)
         );
     }
 

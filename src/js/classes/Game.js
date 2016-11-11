@@ -4,6 +4,7 @@ import * as Phaser from 'phaser';
 
 import Controls from './Controls.js';
 import Planet   from './Planet.js';
+import Range    from './Range.js';
 
 /*inShadow(e, t, a, s, n) {
         let i = ((a[1] - t[1]) * e[0] - (a[0] - t[0]) * e[1] + a[0] * t[1] - a[1] * t[0]) / (((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])) / ((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])));
@@ -28,7 +29,7 @@ class Game {
         this.time = 0.0;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.world.setBounds(-5000, -5000, 10000, 10000);
+        this.game.world.setBounds(-20000, -20000, 40000, 40000);
 
         this.sun = this.game.add.graphics(0, 0);
         this.sun.lineStyle(0);
@@ -37,15 +38,13 @@ class Game {
         this.sun.endFill();
 
         this.planet = new Planet(this, {
-            orbitCenter:        new Phaser.Point(0, 0),
-            orbitRadius:        300,
-            radius:             100,
-            focusPointDistance: 20,
-            satelliteRangeMin:  50,
-            satelliteRangeMax:  300
+            center:             new Phaser.Point(0, 0),
+            orbit:              8000,
+            radius:             5000,
+            focusPointDistance: 250
         });
 
-        this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT, 0.5, 0.5);
+        this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
     }
 
     // ##############################################
