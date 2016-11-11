@@ -40,7 +40,7 @@ class Game {
         this.planet = new Planet(this, {
             center:             new Phaser.Point(0, 0),
             orbit:              8000,
-            radius:             5000,
+            radius:             4000,
             focusPointDistance: 250
         });
 
@@ -50,8 +50,10 @@ class Game {
     // ##############################################
 
     update() {
-        this.time = this.game.time.now / 1000;
+        this.time += this.game.time.elapsedMS / 1000;
         this.planet.update();
+
+        this.game.world.rotation = -this.planet.group.rotation - Math.PI / 2;
     }
 
     // ##############################################
