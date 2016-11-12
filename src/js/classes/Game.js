@@ -39,8 +39,8 @@ class Game {
 
         this.planet = new Planet(this, {
             center:             new Phaser.Point(0, 0),
-            orbit:              8000,
-            radius:             4000,
+            orbit:              4000,
+            radius:             2000,
             focusPointDistance: 250
         });
 

@@ -25,7 +25,7 @@ class Planet {
             radius:             options.radius              || 100,
             focusPointDistance: options.focusPointDistance  || 20,
             satellite:          {
-                number:   250,
+                number:   25,
                 altitude: new Range(50, this.game.game.height - 50)
             }
         };
