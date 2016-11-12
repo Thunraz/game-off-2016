@@ -52,9 +52,6 @@ class Planet {
         this.player.pivot.set(1, 1);
 
         let focusPointGraphics = new Phaser.Graphics(0, 0);
-        //focusPointGraphics.beginFill(0x99ff33);
-        //focusPointGraphics.drawCircle(0, 0, 2);
-        //focusPointGraphics.endFill();
         this.focusPoint = this.group.create(
             this.options.radius + this.options.focusPointDistance,
             0,
@@ -78,6 +75,7 @@ class Planet {
         
         // Add planet shadow last so it overlaps everything
         this.shadow = this.game.add.graphics(0, 0);
+        this.shadowPolygon = new Phaser.Polygon([0, 0]);
     }
 
     // ##############################################
@@ -91,7 +89,7 @@ class Planet {
         this.group.x = xPos;
         this.group.y = yPos;
 
-        this.group.rotation -= this.game.game.time.physicsElapsed * 1 / Math.sqrt(this.options.radius);
+        this.group.angle -= this.game.game.time.physicsElapsed * 1 / Math.sqrt(this.options.radius);
 
         // Calculate shadow
         let angle1 = angleBetweenPoints(
@@ -106,15 +104,24 @@ class Planet {
 
         let shadowLength = this.options.radius * 5;
 
+        let points = [
+            { x: xPos + this.options.radius * cos, y: yPos + this.options.radius * sin },
+            { x: xPos + this.options.radius * cos + shadowLength * Math.cos(angle1), y: yPos + this.options.radius * sin + shadowLength * Math.sin(angle1) },
+            { x: xPos - this.options.radius * cos + shadowLength * Math.cos(angle2), y: yPos - this.options.radius * sin + shadowLength * Math.sin(angle2) },
+            { x: xPos - this.options.radius * cos, y: yPos - this.options.radius * sin }
+        ];
+
+        this.shadowPolygon.setTo(points);
+
         this.shadow
             .clear()
             .lineStyle(0)
             .beginFill(0x333333, 0.5)
             
-            .moveTo(xPos + this.options.radius * cos, yPos + this.options.radius * sin)
-            .lineTo(xPos + this.options.radius * cos + shadowLength * Math.cos(angle1), yPos + this.options.radius * sin + shadowLength * Math.sin(angle1))
-            .lineTo(xPos - this.options.radius * cos + shadowLength * Math.cos(angle2), yPos - this.options.radius * sin + shadowLength * Math.sin(angle2))
-            .lineTo(xPos - this.options.radius * cos, yPos - this.options.radius * sin)
+            .moveTo(points[0].x, points[0].y)
+            .lineTo(points[1].x, points[1].y)
+            .lineTo(points[2].x, points[2].y)
+            .lineTo(points[3].x, points[3].y)
             
             .endFill();
     }

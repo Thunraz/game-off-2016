@@ -36,6 +36,12 @@ class Satellite extends Phaser.Sprite {
     update() {
         let val = this.game.time * this.options.velocity + this.options.offset;
 
+        if(this.planet.shadowPolygon.contains(this.x, this.y)) {
+            this.inShadow = true;
+        } else {
+            this.inShadow = false;
+        }
+
         this.position.set(
             this.planet.group.x + this.options.altitude * Math.sin(val),
             this.planet.group.y + this.options.altitude * Math.cos(val)
