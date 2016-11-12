@@ -15,7 +15,7 @@ class Satellite extends Phaser.Sprite {
             clockwise: options.clockwise || true,
 
             offset:    Math.random() * Math.PI * 2,
-            velocity:  1 / Math.pow(options.altitude - planet.options.radius, 1.1) * 10 * (options.clockwise ? 1 : -1)
+            velocity:  1 / Math.pow(options.altitude - planet.options.radius + 500, 1.5) * 1000 * (options.clockwise ? 1 : -0.5)
         };
 
         this.planet = planet;
