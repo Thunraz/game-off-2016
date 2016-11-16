@@ -16,8 +16,9 @@ class Planet {
     // ##############################################
     // # Constructor ################################
     // ##############################################
-    constructor(game, options) {
-        this.game = game;
+    constructor(game, player, options) {
+        this.game   = game;
+        this.player = player;
 
         this.options = {
             center:             options.center              || new Phaser.Point(0, 0),
@@ -43,13 +44,8 @@ class Planet {
         let planet = this.group.create(0, 0, planetGraphics.generateTexture());
         planet.pivot.set(this.options.radius, this.options.radius);
 
-        let playerGraphics = new Phaser.Graphics(0, 0);
-        playerGraphics.lineStyle(0);
-        playerGraphics.beginFill(0xff9933);
-        playerGraphics.drawCircle(0, 0, 2);
-        playerGraphics.endFill();
-        this.player = this.group.create(this.options.radius, 0, playerGraphics.generateTexture());
-        this.player.pivot.set(1, 1);
+        this.player.position.set(this.options.radius, 0);
+        this.group.add(this.player);
 
         let focusPointGraphics = new Phaser.Graphics(0, 0);
         this.focusPoint = this.group.create(
@@ -81,15 +77,15 @@ class Planet {
     // ##############################################
 
     update() {
-        let sin = Math.sin(this.game.game.time.now / 100000);
-        let cos = Math.cos(this.game.game.time.now / 100000);
+        let sin = Math.sin(this.game.time / 1000);
+        let cos = Math.cos(this.game.time / 1000);
 
         let xPos = this.options.center.x + this.options.orbit * sin;
         let yPos = this.options.center.y - this.options.orbit * cos;
         this.group.x = xPos;
         this.group.y = yPos;
 
-        this.group.angle -= this.game.game.time.physicsElapsed * 1 / Math.sqrt(this.options.radius);
+        this.group.angle = this.game.time * -100 / Math.sqrt(this.options.radius);
 
         // Calculate shadow
         let angle1 = angleBetweenPoints(

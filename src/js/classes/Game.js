@@ -4,7 +4,7 @@ import * as Phaser from 'phaser';
 
 import Controls from './Controls.js';
 import Planet   from './Planet.js';
-import Range    from './Range.js';
+import Player   from './Player.js';
 
 /*inShadow(e, t, a, s, n) {
         let i = ((a[1] - t[1]) * e[0] - (a[0] - t[0]) * e[1] + a[0] * t[1] - a[1] * t[0]) / (((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])) / ((a[1] - t[1]) * (a[1] - t[1]) + (a[0] - t[0]) * (a[0] - t[0])));
@@ -26,7 +26,9 @@ class Game {
 
     create() {
         this.controls = new Controls(this.game);
-        this.time = 0.0;
+
+        this.time    = 0.0;
+        this.elapsed = 0.0;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.world.setBounds(-20000, -20000, 40000, 40000);
@@ -37,20 +39,23 @@ class Game {
         this.sun.drawCircle(0, 0, 20);
         this.sun.endFill();
 
-        this.planet = new Planet(this, {
+        this.player = new Player(this.game);
+
+        this.planet = new Planet(this, this.player, {
             center:             new Phaser.Point(0, 0),
             orbit:              4000,
             radius:             2000,
             focusPointDistance: 250
         });
 
-        this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+        this.game.camera.follow(this.planet.focusPoint, Phaser.Camera.FOLLOW_LOCKON, 1, 1);
     }
 
     // ##############################################
 
     update() {
-        this.time += this.game.time.elapsedMS / 1000;
+        this.elapsed = this.game.time.physicsElapsed;
+        this.time   += this.elapsed;
         this.planet.update();
 
         this.game.world.rotation = -this.planet.group.rotation - Math.PI / 2;
