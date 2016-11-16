@@ -14,8 +14,9 @@ class Controls {
         this.enabled = false;
 
         let scope = this;
-        document.addEventListener('pointerlockchange', () => { scope.onPointerLockChange() }, false);
-        document.addEventListener('pointerlockerror',  () => { scope.onPointerLockError()  }, false);
+        document.addEventListener('pointerlockchange', ( ) => { scope.onPointerLockChange() }, false);
+        document.addEventListener('pointerlockerror',  ( ) => { scope.onPointerLockError()  }, false);
+        document.addEventListener('mousemove',         (e) => { scope.onMouseMove(e)  }, false);
 
         noticeContainer.addEventListener('click', () => {
             noticeContainer.style.display = 'none';
@@ -46,6 +47,14 @@ class Controls {
 
     onPointerLockError() {
         noticeContainer.style.display = '';
+    }
+
+    // ##############################################
+
+    onMouseMove(e) {
+        if(this.enabled) {
+            //console.log(e.movementX, e.movementY);
+        }
     }
 
     // ##############################################
