@@ -64,8 +64,7 @@ class Game {
     // ##############################################
     
     render() {
-        this.game.debug.cameraInfo(this.game.camera, 0, 32);
-        //this.game.debug.text('Satellite in shadow: ' + this.satellite.inShadow, 0, 10);
+        //this.game.debug.cameraInfo(this.game.camera, 0, 32);
     }
 
     // ##############################################
