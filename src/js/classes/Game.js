@@ -39,7 +39,7 @@ class Game {
         this.sun.drawCircle(0, 0, 20);
         this.sun.endFill();
 
-        this.player = new Player(this.game);
+        this.player = new Player(this);
 
         this.planet = new Planet(this, this.player, {
             center:             new Phaser.Point(0, 0),

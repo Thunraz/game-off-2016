@@ -13,6 +13,8 @@ class Controls {
         this.game.paused = true;
         this.enabled = false;
 
+        this.mouseMoveListeners = [];
+
         let scope = this;
         document.addEventListener('pointerlockchange', ( ) => { scope.onPointerLockChange() }, false);
         document.addEventListener('pointerlockerror',  ( ) => { scope.onPointerLockError()  }, false);
@@ -53,7 +55,9 @@ class Controls {
 
     onMouseMove(e) {
         if(this.enabled) {
-            //console.log(e.movementX, e.movementY);
+            for(let i = 0; i < this.mouseMoveListeners.length; i++) {
+                this.mouseMoveListeners[i].callback(e, this.mouseMoveListeners[i].scope);
+            }
         }
     }
 
