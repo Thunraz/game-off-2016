@@ -18,11 +18,20 @@ class Game {
     // ##############################################
     constructor() {
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-container', {
-            create: this.create,
-            update: this.update,
-            render: this.render
+            preload: this.preload,
+            create:  this.create,
+            update:  this.update,
+            render:  this.render
         });
     }
+
+    // ##############################################
+
+    preload() {
+        this.game.load.bitmapFont('Mecha', 'assets/Mecha.png', 'assets/Mecha.fnt');
+    }
+
+    // ##############################################
 
     create() {
         this.controls = new Controls(this.game);
