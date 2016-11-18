@@ -27,7 +27,7 @@ class Player extends Phaser.Sprite {
             .endFill();*/
         this.addChild(this.aimTarget);
 
-        this.aimNumber = 0.0;
+        this.aimNumber = Math.PI / 2;
 
         this.aim = this.game.add.graphics(0, 0);
         this.aim
