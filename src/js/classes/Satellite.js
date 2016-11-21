@@ -5,13 +5,25 @@ import * as Phaser from 'phaser';
 let nextId = 0;
 
 function generateName() {
-    let prefixes = ['Acro', 'Alpha', 'Atlas'];
-    let suffixes = ['Sat', 'View'];
+    let prefixes = [
+        'Acro', 'Alpha', 'Atlas', 'Bandit', 'Crystal', 'Delta', 'Dragon', 'Final', 'Galaxy', 'Global', 'Harmony',
+        'Lotus', 'Radio', 'Total', 'Video'
+    ];
+    let suffixes = ['Sat', 'View', 'Meter', 'Signal', 'Observer', 'Capsule'];
 
     let prefix = prefixes[Math.round(Math.random() * prefixes.length - 1)];
     let suffix = suffixes[Math.round(Math.random() * suffixes.length - 1)];
+    let num = 0;
 
-    return prefix + suffix;
+    function compare(obj, pre, suf, n) {
+        return obj == pre + suf + ' #' + n;
+    }
+
+    while(satelliteNames.find(compare)) {
+        num++;
+    }
+
+    return prefix + suffix + ' #' + num;
 }
 
 function formatVelocity(velocity) {
@@ -23,6 +35,8 @@ function formatAltitude(altitude, planetRadius) {
     let value = Math.round(Math.abs(altitude - planetRadius) / 10);
     return value * 40;
 }
+
+let satelliteNames = [];
 
 class Satellite extends Phaser.Sprite {
     // ##############################################
@@ -52,7 +66,7 @@ class Satellite extends Phaser.Sprite {
         graphics.endFill();
         this.texture = graphics.generateTexture();
         
-        let satelliteText = this.name + ' #' + this.id + '\n';
+        let satelliteText = this.name + '\n';
         satelliteText    += 'Velocity: '  + formatVelocity(this.options.velocity) + ' km/s\n';
         satelliteText    += 'Altitude: '  + formatAltitude(this.options.altitude, planet.options.radius) + ' km';
         this.text = planet.game.add.bitmapText(this.x + 8, this.y + 10, 'Mecha', satelliteText, 17);
