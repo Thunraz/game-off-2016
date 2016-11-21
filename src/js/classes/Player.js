@@ -17,15 +17,7 @@ class Player extends Phaser.Sprite {
         this.texture = graphics.generateTexture();
         this.pivot.set(3, 3);
 
-        this.aimTarget = this.game.add.graphics(200, 0);
-        /*this.aimTarget
-            .lineStyle(1, 0xff9900, 1)
-            .moveTo(-10, 0)
-            .lineTo(10, 0)
-            .moveTo(0, -10)
-            .lineTo(0, 10)
-            .endFill();*/
-        this.addChild(this.aimTarget);
+        this.aimTarget = new Phaser.Point(200, 0);
 
         this.aimNumber = Math.PI / 2;
 
@@ -33,13 +25,13 @@ class Player extends Phaser.Sprite {
         this.aim
             .lineStyle(1, 0x663300, 1)
             .moveTo(0, 0)
-            .lineTo(this.aimTarget.position.x, this.aimTarget.position.y)
+            .lineTo(this.aimTarget.x, this.aimTarget.y)
             .moveTo(0, 0)
             .lineStyle(7, 0x663300, 0.25)
-            .lineTo(this.aimTarget.position.x, this.aimTarget.position.y)
+            .lineTo(this.aimTarget.x, this.aimTarget.y)
             .moveTo(0, 0)
             .lineStyle(15, 0x663300, 0.125)
-            .lineTo(this.aimTarget.position.x, this.aimTarget.position.y)
+            .lineTo(this.aimTarget.x, this.aimTarget.y)
             .endFill();
         this.addChild(this.aim);
     }
@@ -52,7 +44,7 @@ class Player extends Phaser.Sprite {
         this.aim.pivot.set(this.world.x - 2, this.world.y - 2);
         this.aim.position = this.world;
 
-        this.aimTarget.position.set(
+        this.aimTarget.set(
             Math.sin(this.aimNumber) * 300,
             Math.cos(this.aimNumber) * 300
         );
@@ -61,13 +53,13 @@ class Player extends Phaser.Sprite {
             .clear()
             .lineStyle(1, 0x663300, 1)
             .moveTo(0, 0)
-            .lineTo((this.aimTarget.position.x - 2) * 3, this.aimTarget.position.y * 3)
+            .lineTo((this.aimTarget.x - 2) * 3, this.aimTarget.y * 3)
             .moveTo(0, 0)
             .lineStyle(7, 0x663300, 0.25)
-            .lineTo(this.aimTarget.position.x * 3, this.aimTarget.position.y * 3)
+            .lineTo(this.aimTarget.x * 3, this.aimTarget.y * 3)
             .moveTo(0, 0)
             .lineStyle(15, 0x663300, 0.125)
-            .lineTo(this.aimTarget.position.x * 3, this.aimTarget.position.y * 3)
+            .lineTo(this.aimTarget.x * 3, this.aimTarget.y * 3)
             .endFill();
     }
 
