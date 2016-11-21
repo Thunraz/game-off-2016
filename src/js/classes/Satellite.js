@@ -10,10 +10,14 @@ function generateName() {
         'Lotus', 'Radio', 'Total', 'Video'
     ];
     let suffixes = ['Sat', 'View', 'Meter', 'Signal', 'Observer', 'Capsule'];
-
-    let prefix = prefixes[Math.round(Math.random() * prefixes.length - 1)];
-    let suffix = suffixes[Math.round(Math.random() * suffixes.length - 1)];
+    
     let num = 0;
+
+    let prefixIndex = Math.round(Math.random() * (prefixes.length - 1));
+    let prefix = prefixes[prefixIndex];
+
+    let suffixIndex = Math.round(Math.random() * (suffixes.length - 1)) 
+    let suffix = suffixes[suffixIndex];
 
     function compare(obj, pre, suf, n) {
         return obj == pre + suf + ' #' + n;
