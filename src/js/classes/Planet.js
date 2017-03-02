@@ -38,7 +38,7 @@ class Planet {
 
         let planetGraphics = new Phaser.Graphics(0, 0);
         planetGraphics.lineStyle(0);
-        planetGraphics.beginFill(0x3399ff);
+        planetGraphics.beginFill(0x497b7a);
         planetGraphics.drawCircle(0, 0, this.options.radius * 2);
         planetGraphics.endFill();
         let planet = this.group.create(0, 0, planetGraphics.generateTexture());
