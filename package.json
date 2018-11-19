@@ -11,6 +11,10 @@
   "bugs": {
     "url": "https://github.com/Thunraz/game-off-2016/issues"
   },
+  "scripts": {
+    "build": "gulp build",
+    "dev": "gulp watch"
+  },
   "homepage": "https://github.com/Thunraz/game-off-2016#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
